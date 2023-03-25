@@ -21,7 +21,7 @@ const dataSourceConfig = (): DataSourceOptions => {
   if (nodeEnv === "production") {
     return {
       type: "postgres",
-      url: String(process.env.DATABASE_URL),
+      url: process.env.DATABASE_URL,
       entities: [entitiesPath],
       migrations: [migrationsPath],
       synchronize: true,
