@@ -8,7 +8,7 @@
         "typeorm": "typeorm-ts-node-commonjs",
         "build": "tsc",
         "start": "node dist/server.js",
-        "migration:prod": "typeorm migration:run -d dist/data-source",
+        "migration:prod": "typeorm migration:run -- -d dist/data-source",
         "vercel-build": "ts-node ./node_modules/typeorm/cli.js migration:run"
     },
     "keywords": [],
