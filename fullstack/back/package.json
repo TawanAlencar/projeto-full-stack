@@ -9,7 +9,7 @@
         "build": "tsc",
         "start": "node dist/server.js",
         "migration:prod": "typeorm migration:run -d dist/data-source",
-        "vercel-build": "npm run typeorm migration:run -- -d ./src/data-source"
+        "vercel-build": "typeorm migration:run -- -d ./src/data-source"
     },
     "keywords": [],
     "author": "",
