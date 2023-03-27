@@ -9,10 +9,15 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  FormControl,
 } from "@chakra-ui/react";
+
 
 export const Register = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  
+
   return (
     <>
       <Button
@@ -31,17 +36,33 @@ export const Register = () => {
         <ModalOverlay />
         <ModalContent bg="#000000b9" border={"1px solid white"}>
           <ModalHeader color="white">Cadastro</ModalHeader>
-          <ModalCloseButton color={"white"}/>
+          <ModalCloseButton color={"white"} />
           <ModalBody
             display="flex"
             flexDirection={"column"}
             alignItems={"center"}
-            gap="20px"
           >
-            <Input placeholder="Digite aqui seu nome completo" />
-            <Input placeholder="Digite aqui seu email" />
-            <Input placeholder="Digite aqui seu numero de telefone" />
-            <Input placeholder="Digite aqui sua senha" />
+            <FormControl display="flex" flexDirection={"column"} gap="20px">
+              <Input
+                color="white"
+                placeholder="Digite aqui seu nome completo"
+              />
+              <Input
+                color="white"
+                placeholder="Digite aqui seu email"
+                type="email"
+              />
+              <Input
+                color="white"
+                placeholder="Digite aqui sua senha"
+                type={"password"}
+              />
+
+              <Input
+                color="white"
+                placeholder="Digite aqui seu numero de telefone"
+              />
+            </FormControl>
           </ModalBody>
 
           <ModalFooter display={"flex"} gap="20px">
@@ -50,7 +71,7 @@ export const Register = () => {
               color={"white"}
               _hover={{ background: "#081329" }}
             >
-              Cadastre-se
+              Cadastrar
             </Button>
             <Button
               bg="red"

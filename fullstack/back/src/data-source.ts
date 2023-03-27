@@ -3,7 +3,7 @@ import path from "path";
 import "reflect-metadata";
 import { DataSource, DataSourceOptions } from "typeorm";
 
-const nodeEnv: string = process.env.NODE_ENV
+const nodeEnv: string = process.env.NODE_ENV;
 
 const dataSourceConfig = (): DataSourceOptions => {
   const entitiesPath: string = path.join(__dirname, "./entities/*.{js,ts}");
@@ -38,7 +38,7 @@ const dataSourceConfig = (): DataSourceOptions => {
     logging: false,
     entities: [entitiesPath],
     migrations: [migrationsPath],
-    synchronize: false,
+    synchronize: true,
   };
 };
 

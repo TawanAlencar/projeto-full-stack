@@ -42,6 +42,6 @@ export class User {
     this.password = hashSync(this.password, 10);
   }
 
-  @OneToMany(() => Contacts, (contacts) => contacts.user)
+  @OneToMany(() => Contacts, (contacts) => contacts.user,{onDelete:"CASCADE"})
   contacts: Contacts[];
 }

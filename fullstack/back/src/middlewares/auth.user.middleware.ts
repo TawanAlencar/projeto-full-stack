@@ -23,12 +23,12 @@ const authUserMiddleware = async (
 
   return jwt.verify(token, process.env.SECRET_KEY,async (error, decoded) => {
     if (error) {
-        throw new AppError("Invalid token", 401);
+        throw new AppError(error.message, 401);
     }
     const id = String(decoded.sub);
     const clientFound = await clientRepo.findOneBy({ id });
     if (!clientFound) {
-        throw new AppError("User Not Found", 404);
+        throw new AppError(error.message, 404);
     }
     req.clientFound = clientFound;
     return next();

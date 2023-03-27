@@ -9,6 +9,7 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
+    FormControl
 } from "@chakra-ui/react";
 
 export const Login = () => {
@@ -42,8 +43,11 @@ export const Login = () => {
                 flexDirection={"column"}
                 alignItems={"center"}
             >
-                <Input placeholder="Digite aqui seu email" marginBottom={"20px"} />
-                <Input placeholder="Digite aqui sua senha" />
+                <FormControl>
+                    <Input color="white" placeholder="Digite aqui seu email" marginBottom={"20px"} type="email"/>
+                    <Input color="white" placeholder="Digite aqui sua senha" type={"password"} />
+                </FormControl>
+                
             </ModalBody>
 
             <ModalFooter display={"flex"} gap="20px">

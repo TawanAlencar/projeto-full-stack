@@ -20,5 +20,5 @@ contactRouter.post(
   createContactController
 );
 contactRouter.get("/", authUserMiddleware, listContactsController);
-contactRouter.delete("/:id", authUserMiddleware, deleteContactsController);
+contactRouter.delete("/:id", authUserMiddleware,deleteContactsController);
 contactRouter.patch("/:id", authUserMiddleware, updateContactsController);

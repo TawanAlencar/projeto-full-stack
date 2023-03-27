@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createUserController,
   deleteUserController,
+  listProfileController,
   listUsersController,
   updateUserController,
 } from "../controllers/users";
@@ -19,5 +20,6 @@ userRouter.post(
   createUserController
 );
 userRouter.get("/", authUserMiddleware, listUsersController);
+userRouter.get("/profile",authUserMiddleware,listProfileController)
 userRouter.delete("/:id", authUserMiddleware, deleteUserController);
 userRouter.patch("/:id", authUserMiddleware, updateUserController);
