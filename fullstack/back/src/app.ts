@@ -5,11 +5,12 @@ import { userRouter } from "./routers/users.routers"
 import { errorHandler } from "./errors/handle.error"
 import { loginRouter } from "./routers/login.routers"
 import { contactRouter } from "./routers/contacts.routers"
-
+import cors from "cors"
 
 
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 app.use("/user", userRouter);
 app.use("/login",loginRouter)
