@@ -10,13 +10,46 @@ import {
   ModalCloseButton,
   useDisclosure,
   FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Box,
 } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useContextFunction } from "@/contexts/auth.contexts";
 
 
 export const Register = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { submitRegister } = useContextFunction();
 
-  
+  const formSchema = yup.object().shape({
+    email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
+    password: yup
+      .string()
+      .required("Senha obrigatória")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
+        "A senha deve possuir no mínimo 8 caracteres, ter no mínimo uma letra maiscúla e uma letra minuscúla e um caractere especial"
+      ),
+    name: yup.string().required("Nome obrigatório").min(1),
+    phone: yup.string().required("Telefone obrigatório"),
+  });
+
+  type errors = {
+    name: string;
+    email: string;
+    password: string;
+    phone: string;
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<errors>({
+    resolver: yupResolver(formSchema),
+  });
 
   return (
     <>
@@ -42,26 +75,65 @@ export const Register = () => {
             flexDirection={"column"}
             alignItems={"center"}
           >
-            <FormControl display="flex" flexDirection={"column"} gap="20px">
-              <Input
-                color="white"
-                placeholder="Digite aqui seu nome completo"
-              />
-              <Input
-                color="white"
-                placeholder="Digite aqui seu email"
-                type="email"
-              />
-              <Input
-                color="white"
-                placeholder="Digite aqui sua senha"
-                type={"password"}
-              />
+            <FormControl
+              as={"form"}
+              isInvalid={!!errors}
+              display="flex"
+              flexDirection={"column"}
+              gap="20px"
+            >
+              <FormLabel color="white" htmlFor="name">
+                Nome
+              </FormLabel>
+              <Box>
+                <Input
+                  id="name"
+                  color="white"
+                  placeholder="Digite aqui seu nome completo"
+                  {...register("name")}
+                />
+                <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
 
-              <Input
-                color="white"
-                placeholder="Digite aqui seu numero de telefone"
-              />
+              </Box>
+              <Box>
+                <FormLabel color="white" htmlFor="email">
+                  Email
+                </FormLabel>
+
+                <Input
+                  id="email"
+                  color="white"
+                  placeholder="Digite aqui seu email"
+                  type="email"
+                  {...register("email")}
+                />
+                <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+              </Box>
+              <Box>
+                <FormLabel color="white" htmlFor="senha">
+                  Senha
+                </FormLabel>
+                <Input
+                  id="password"
+                  color="white"
+                  placeholder="Digite aqui sua senha"
+                  type={"password"}
+                  {...register("password")}
+                />
+                <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+              </Box>
+              <Box>
+                <FormLabel color="white" htmlFor="name">
+                  Telefone
+                </FormLabel>
+                <Input
+                  id="phone"
+                  color="white"
+                  placeholder="Digite aqui seu numero de telefone"
+                  {...register("phone")}
+                />
+                <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
+              </Box>
             </FormControl>
           </ModalBody>
 
@@ -70,6 +142,7 @@ export const Register = () => {
               bg="blue"
               color={"white"}
               _hover={{ background: "#081329" }}
+              onClick={handleSubmit(submitRegister)}
             >
               Cadastrar
             </Button>
