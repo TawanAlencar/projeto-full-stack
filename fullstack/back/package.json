@@ -43,9 +43,8 @@
         "typeorm": "^0.3.7",
         "typescript": "^4.9.5",
         "uuid": "^9.0.0",
-        "yup": "^0.32.11"
-    },
-    "devDependencies": {
+        "yup": "^0.32.11",
         "@types/cors": "^2.8.13"
     }
+  
 }

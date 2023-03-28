@@ -10,7 +10,6 @@ import {
 } from "typeorm";
 import { Contacts } from "./contacts.entities";
 
-
 @Entity("user")
 export class User {
   @PrimaryGeneratedColumn("uuid")
@@ -22,7 +21,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({select:false})
+  @Column({ select: false })
   password: string;
 
   @Column({ default: true })
@@ -42,6 +41,8 @@ export class User {
     this.password = hashSync(this.password, 10);
   }
 
-  @OneToMany(() => Contacts, (contacts) => contacts.user,{onDelete:"CASCADE"})
+  @OneToMany(() => Contacts, (contacts) => contacts.user, {
+    onDelete: "CASCADE",
+  })
   contacts: Contacts[];
 }

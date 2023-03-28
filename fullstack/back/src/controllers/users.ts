@@ -5,8 +5,6 @@ import listProfileService from "../services/users/list.profile.services";
 import listUserService from "../services/users/list.users.services";
 import updateUserService from "../services/users/update.users.services";
 
-
-
 export const createUserController = async (req: Request, res: Response) => {
   const userData = req.body;
   const newUser = await createUserService(userData);
@@ -19,8 +17,8 @@ export const listUsersController = async (req: Request, res: Response) => {
 };
 
 export const deleteUserController = async (req: Request, res: Response) => {
-  const userId  = req.params.id 
-  await deleteUserService(userId) ;
+  const userId = req.params.id;
+  await deleteUserService(userId);
   return res.sendStatus(204);
 };
 
@@ -31,8 +29,8 @@ export const updateUserController = async (req: Request, res: Response) => {
   return res.status(200).json(updatedUser);
 };
 
-export const listProfileController = async (req:Request, res:Response)=>{
-  const token = req.headers.authorization
-  const profile = await listProfileService(token)
+export const listProfileController = async (req: Request, res: Response) => {
+  const token = req.headers.authorization;
+  const profile = await listProfileService(token);
   return res.status(200).json(profile);
-}
+};

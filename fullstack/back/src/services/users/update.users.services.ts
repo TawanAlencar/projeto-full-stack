@@ -2,7 +2,6 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/user.entities";
 import { IUser, IUserUpdate } from "../../interfaces/users";
 
-
 const updateUserService = async (
   userData: IUserUpdate,
   userId: string
@@ -13,7 +12,6 @@ const updateUserService = async (
     where: {
       id: userId,
     },
-    
   });
 
   const updatedUser = userRepository.create({
@@ -22,7 +20,7 @@ const updateUserService = async (
   });
 
   await userRepository.save(updatedUser);
- 
+
   return updatedUser;
 };
 

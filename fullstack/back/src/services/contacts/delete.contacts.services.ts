@@ -1,14 +1,12 @@
 import { AppDataSource } from "../../data-source";
 import { Contacts } from "../../entities/contacts.entities";
 
-
-
 const deleteContactsService = async (contactId: string) => {
-    const contactsRepository = AppDataSource.getRepository(Contacts);
+  const contactsRepository = AppDataSource.getRepository(Contacts);
 
-    const contacts = await contactsRepository.delete(contactId)
+  const contacts = await contactsRepository.delete(contactId);
 
-    return contacts
+  return contacts;
 };
 
 export default deleteContactsService;

@@ -4,12 +4,9 @@ import deleteContactsService from "../services/contacts/delete.contacts.services
 import listContactsService from "../services/contacts/list.contacts.services";
 import updateContactsService from "../services/contacts/update.contacts.services";
 
-
-
-
 export const createContactController = async (req: Request, res: Response) => {
   const contactData = req.body;
-  const newContact = await createContactService(contactData,req.clientFound);
+  const newContact = await createContactService(contactData, req.clientFound);
   return res.status(201).json(newContact);
 };
 

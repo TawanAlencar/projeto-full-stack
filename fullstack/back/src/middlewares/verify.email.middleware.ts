@@ -24,7 +24,7 @@ const emailExistsMiddleware = async (
       email,
     },
   });
-  if(contacts){
+  if (contacts) {
     throw new AppError("Contact already exists", 409);
   }
 
