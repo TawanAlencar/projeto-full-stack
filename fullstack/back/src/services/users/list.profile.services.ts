@@ -9,7 +9,7 @@ const listProfileService = async (token: string) => {
   token = token.split(" ")[1];
   const { sub } = jwt.decode(token);
 
-  return await userRepository.find({
+  return await userRepository.findOne({
     select: ["id", "name", "email", "phone", "createdAt", "updatedAt"],
     relations: {
       contacts: true,

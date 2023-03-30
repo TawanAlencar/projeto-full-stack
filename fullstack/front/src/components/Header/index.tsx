@@ -9,7 +9,7 @@ export const Header = ({ children }: Ichildren) => {
   return (
     <Flex
       as={"header"}
-      w="100vw"
+      w="100%"
       align="center"
       minW={"320px"}
       justify="space-between"
@@ -17,12 +17,15 @@ export const Header = ({ children }: Ichildren) => {
       m="0 auto"
       minH="80px"
       zIndex={"2"}
+      border="2px solid #111111"
       bg="#111111"
       sx={{ boxShadow: "0px 4px 9px rgba(0, 0, 0, 0.507)" }}
-      position="fixed"
+      position="relative"
     >
       <Flex w={"100%"} justify="space-between">
-        <Heading color={"white"}>FULLSTACK</Heading>
+        <Heading color={"white"} textShadow={"2px 2px 5px"}>
+          User Connect
+        </Heading>
         <Flex justify={"space-between"} gap={5}>
           {children}
         </Flex>

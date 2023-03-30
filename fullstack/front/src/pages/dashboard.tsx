@@ -1,6 +1,14 @@
 
-export default function DashBoard(){
-    return(
-        <h1>Você chegou aqui</h1>
-    )
+import { MainDashboard } from "@/components/MainDashboard";
+
+
+export default function DashBoard() {
+  return (
+    <>
+      
+			
+			<MainDashboard/>
+     
+    </>
+  );
 }

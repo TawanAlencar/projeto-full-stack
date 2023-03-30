@@ -8,7 +8,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -18,11 +17,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useContextFunction } from "@/contexts/auth.contexts";
+import InputMask from "react-input-mask";
 
 
+export const styleInputMask = {
+  width: "100%",
+  backgroundColor: "inherit",
+  border: "1px solid",
+  borderColor: "inherit",
+  height: "var(--chakra-sizes-10)",
+  borderRadius: "var(--chakra-radii-md)",
+  padding: "0 1rem",
+  color: "white",
+};
 export const Register = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { submitRegister } = useContextFunction();
+  const { submitRegister, setOpenRegister, openRegister } =
+    useContextFunction();
 
   const formSchema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
@@ -43,6 +53,7 @@ export const Register = () => {
     password: string;
     phone: string;
   };
+
   const {
     register,
     handleSubmit,
@@ -51,10 +62,12 @@ export const Register = () => {
     resolver: yupResolver(formSchema),
   });
 
+
+
   return (
     <>
       <Button
-        onClick={onOpen}
+        onClick={() => setOpenRegister(true)}
         color={"white"}
         border="solid 1px white"
         bg={"transparent"}
@@ -65,9 +78,9 @@ export const Register = () => {
         Cadastro
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={openRegister} onClose={() => setOpenRegister(false)}>
         <ModalOverlay />
-        <ModalContent bg="#000000b9" border={"1px solid white"}>
+        <ModalContent bg="#000000ed" border={"1px solid white"}>
           <ModalHeader color="white">Cadastro</ModalHeader>
           <ModalCloseButton color={"white"} />
           <ModalBody
@@ -77,7 +90,14 @@ export const Register = () => {
           >
             <FormControl
               as={"form"}
-              isInvalid={!!errors}
+              isInvalid={
+                errors.name ||
+                errors.password ||
+                errors.email ||
+                errors.phone
+                  ? true
+                  : false
+              }
               display="flex"
               flexDirection={"column"}
               gap="20px"
@@ -93,7 +113,6 @@ export const Register = () => {
                   {...register("name")}
                 />
                 <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-
               </Box>
               <Box>
                 <FormLabel color="white" htmlFor="email">
@@ -126,9 +145,10 @@ export const Register = () => {
                 <FormLabel color="white" htmlFor="name">
                   Telefone
                 </FormLabel>
-                <Input
+                <InputMask
+                  mask={"(99) 99999-9999"}
                   id="phone"
-                  color="white"
+                  style={styleInputMask}
                   placeholder="Digite aqui seu numero de telefone"
                   {...register("phone")}
                 />
@@ -150,7 +170,7 @@ export const Register = () => {
               bg="red"
               color="white"
               mr={3}
-              onClick={onClose}
+              onClick={() => setOpenRegister(false)}
               _hover={{ background: "#ff0000a9" }}
             >
               Close

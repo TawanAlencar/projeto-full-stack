@@ -11,30 +11,23 @@ import {
   ModalCloseButton,
   useDisclosure,
   FormControl,
-	FormErrorMessage,
-	FormLabel,
-	Box,
+  FormErrorMessage,
+  FormLabel,
+  Box,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 export const Login = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { submitLogin } = useContextFunction();
+  const { submitLogin, openLogin, setOpenLogin } = useContextFunction();
 
   const formSchema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
-    password: yup
-      .string()
-      .required("Senha obrigatória")
-      .matches(
-        /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
-        "A senha deve possuir no mínimo 8 caracteres, ter no mínimo uma letra maiscúla e uma letra minuscúla e um caractere especial"
-      ),
+    password: yup.string().required("Senha obrigatória"),
   });
-	
-	type errors = {
+
+  type errors = {
     email: string;
     password: string;
   };
@@ -49,7 +42,7 @@ export const Login = () => {
   return (
     <>
       <Button
-        onClick={onOpen}
+        onClick={() => setOpenLogin(true)}
         color={"white"}
         border="solid 1px white"
         bg={"transparent"}
@@ -60,14 +53,9 @@ export const Login = () => {
         Login
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={openLogin} onClose={() => setOpenLogin(false)}>
         <ModalOverlay />
-        <ModalContent
-          bg="#000000b9"
-          border={"1px solid white"}
-          p="10px"
-          gap={"10px"}
-        >
+        <ModalContent bg="#000000d1" border={"1px solid white"}>
           <ModalHeader color="white">Login</ModalHeader>
           <ModalCloseButton color={"white"} />
           <ModalBody
@@ -75,34 +63,36 @@ export const Login = () => {
             flexDirection={"column"}
             alignItems={"center"}
           >
-            <FormControl isInvalid={!!errors.email}>
-							<Box>
-									<FormLabel color="white" htmlFor="email">
-										Email
-									</FormLabel>
+            <FormControl
+              isInvalid={errors.email || errors.password ? true : false}
+            >
+              <Box>
+                <FormLabel color="white" htmlFor="email">
+                  Email
+                </FormLabel>
 
-									<Input
-										id="email"
-										color="white"
-										placeholder="Digite aqui seu email"
-										type="email"
-										{...register("email")}
-									/>
-									<FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-								</Box>
-								<Box>
-									<FormLabel color="white" htmlFor="senha">
-										Senha
-									</FormLabel>
-									<Input
-										id="password"
-										color="white"
-										placeholder="Digite aqui sua senha"
-										type={"password"}
-										{...register("password")}
-									/>
-									<FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-								</Box>
+                <Input
+                  id="email"
+                  color="white"
+                  placeholder="Digite aqui seu email"
+                  type="email"
+                  {...register("email")}
+                />
+                <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+              </Box>
+              <Box>
+                <FormLabel color="white" htmlFor="senha">
+                  Senha
+                </FormLabel>
+                <Input
+                  id="password"
+                  color="white"
+                  placeholder="Digite aqui sua senha"
+                  type={"password"}
+                  {...register("password")}
+                />
+                <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+              </Box>
             </FormControl>
           </ModalBody>
 
@@ -111,7 +101,7 @@ export const Login = () => {
               bg="blue"
               color={"white"}
               _hover={{ background: "#081329" }}
-							onClick={handleSubmit(submitLogin)}
+              onClick={handleSubmit(submitLogin)}
             >
               Entre
             </Button>
@@ -119,7 +109,7 @@ export const Login = () => {
               bg="red"
               color="white"
               mr={3}
-              onClick={onClose}
+              onClick={() => setOpenLogin(false)}
               _hover={{ background: "#ff0000a9" }}
             >
               Close
@@ -130,5 +120,3 @@ export const Login = () => {
     </>
   );
 };
-
-
