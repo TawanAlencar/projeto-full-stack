@@ -6,7 +6,7 @@ Pode ser rodada em localhost:3000 ou pela BASE URL:
 https://fullstack-kgtc.onrender.com/
 
 
-POST user/  - Cria um usuário - STATUS 201
+`POST user/  - Cria um usuário - STATUS 201
 Corpo da Requisição
 {
 	"name" : "teste",
@@ -14,10 +14,10 @@ Corpo da Requisição
 	"password": "1234",
 	"phone": "40028922"
 }
-
+`
 
 Resposta da API
-{
+`{
 	"id": "8e930d6f-aa36-4236-b621-049cfee5ceb3",
 	"name": "teste",
 	"email": "teste@email.com",
@@ -27,7 +27,7 @@ Resposta da API
 	"updatedAt": "2023-03-31T04:07:02.300Z",
 	"contacts": []
 }
-
+`
 
 
 POST login/ - Loga na Api - STATUS 200 
