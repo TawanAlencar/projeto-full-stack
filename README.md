@@ -8,14 +8,14 @@ https://fullstack-kgtc.onrender.com/
 
 POST user/  - Cria um usuário - STATUS 201
 Corpo da Requisição
-'''
+```
 {
 	"name" : "teste",
 	"email": "teste@email.com",
 	"password": "1234",
 	"phone": "40028922"
 }
-'''
+```
 
 Resposta da API
 `{
