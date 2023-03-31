@@ -25,7 +25,6 @@ import InputMask from "react-input-mask";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
 
 export const Cards = () => {
   const {
@@ -37,6 +36,7 @@ export const Cards = () => {
     updateContacts,
     currentContact,
     setCurrentContact,
+    user,
   } = useContextFunction();
 
   const formSchema = yup.object().shape({
@@ -170,7 +170,7 @@ export const Cards = () => {
                           id="name"
                           color="white"
                           placeholder="Digite aqui o nome completo"
-						  defaultValue={currentContact?.name}
+                          defaultValue={currentContact?.name}
                           {...register("name")}
                         />
                         <FormErrorMessage>
@@ -187,7 +187,7 @@ export const Cards = () => {
                           color="white"
                           placeholder="Digite aqui seu email"
                           type="email"
-						  defaultValue={currentContact?.email}
+                          defaultValue={currentContact?.email}
                           {...register("email")}
                         />
                         <FormErrorMessage>
@@ -205,7 +205,7 @@ export const Cards = () => {
                           id="phone"
                           color="white"
                           placeholder="Digite aqui seu numero de telefone"
-						  defaultValue={currentContact?.phone}
+                          defaultValue={currentContact?.phone}
                           {...register("phone")}
                         />
                         <FormErrorMessage>

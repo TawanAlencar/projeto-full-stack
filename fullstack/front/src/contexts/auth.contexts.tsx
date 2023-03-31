@@ -74,6 +74,8 @@ interface IFindContacts{
   
 }
 
+
+
 interface IListContacts {
   id: string;
   email: string;
@@ -88,13 +90,21 @@ interface IListContacts {
     }
   ];
 }
+
 interface IFindUser {
   id: string;
   name: string;
   email: string;
   phone: string;
   is_active: boolean;
-  contacts: [];
+  contacts:[
+    {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+    }
+  ];
 }
 
 interface IContactsUpdate {
@@ -172,7 +182,7 @@ export const UserProvider = ({ children }: IUser) => {
       toastError("Algo de errado");
     }
   };
-
+  
   const removeContacts = async (id: string): Promise<void> => {
     
       const { data } = await api.delete(`/contact/${id}`, {

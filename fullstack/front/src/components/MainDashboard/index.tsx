@@ -45,13 +45,14 @@ export const MainDashboard = () => {
       headers: { authorization: `Bearer ${token}` },
     });
     setContacts(findUser.data.contacts);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contacts]);
 
   useEffect(() => {
     renderContacts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [contacts]); 
 
   useEffect(() => {
     const token = getToken();
@@ -61,16 +62,7 @@ export const MainDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /*   useEffect(() => {
-  (async () => {
-     const findUser = await api.get("/user/profile", {
-        headers: { authorization: `Bearer ${token}` },
-    });
-     setContacts(findUser.data.contacts);
-    })();
-
-  }, []);
- */
+  
   const formSchema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
     name: yup.string().required("Nome obrigatório").min(1),
