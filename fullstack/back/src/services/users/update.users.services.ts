@@ -1,3 +1,4 @@
+import { UpdateResult } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/user.entities";
 import { IUser, IUserUpdate } from "../../interfaces/users";
@@ -5,7 +6,7 @@ import { IUser, IUserUpdate } from "../../interfaces/users";
 const updateUserService = async (
   userData: IUserUpdate,
   userId: string
-): Promise<IUser> => {
+): Promise<UpdateResult> => {
   const userRepository = AppDataSource.getRepository(User);
 
   const findUser = await userRepository.findOne({
@@ -14,12 +15,11 @@ const updateUserService = async (
     },
   });
 
-  const updatedUser = userRepository.create({
+  const updatedUser = userRepository.update(userId,{
     ...findUser,
     ...userData,
   });
 
-  await userRepository.save(updatedUser);
 
   return updatedUser;
 };

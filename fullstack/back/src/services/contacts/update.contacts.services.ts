@@ -1,3 +1,4 @@
+import { UpdateResult } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { Contacts } from "../../entities/contacts.entities";
 
@@ -6,7 +7,7 @@ import { IContacts, IContactsUpdate } from "../../interfaces/contacts";
 const updateContactsService = async (
   contactsData: IContactsUpdate,
   contactsId: string
-): Promise<IContacts> => {
+): Promise<UpdateResult> => {
   const contactsRepository = AppDataSource.getRepository(Contacts);
 
   const findContacts = await contactsRepository.findOne({
@@ -15,12 +16,11 @@ const updateContactsService = async (
     },
   });
 
-  const updatedContacts = contactsRepository.create({
+  const updatedContacts = contactsRepository.update( contactsId,{
     ...findContacts,
-    ...contactsData,
+    ...contactsData
   });
 
-  await contactsRepository.save(updatedContacts);
 
   return updatedContacts;
 };
