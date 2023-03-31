@@ -35,6 +35,8 @@ export const Cards = () => {
     openEdit,
     setOpenEdit,
     updateContacts,
+    currentContact,
+    setCurrentContact,
   } = useContextFunction();
 
   const formSchema = yup.object().shape({
@@ -55,7 +57,6 @@ export const Cards = () => {
     formState: { errors },
   } = useForm<errors>({
     resolver: yupResolver(formSchema),
-    
   });
 
   return (
@@ -86,6 +87,7 @@ export const Cards = () => {
               borderBottom={"1px solid white"}
               marginTop="20px"
               listStyleType={"none"}
+              onClick={() => setCurrentContact(e)}
             >
               <Flex w="100%" justify={"space-between"}>
                 <Flex gap="20px">
@@ -168,6 +170,7 @@ export const Cards = () => {
                           id="name"
                           color="white"
                           placeholder="Digite aqui o nome completo"
+						  defaultValue={currentContact?.name}
                           {...register("name")}
                         />
                         <FormErrorMessage>
@@ -184,6 +187,7 @@ export const Cards = () => {
                           color="white"
                           placeholder="Digite aqui seu email"
                           type="email"
+						  defaultValue={currentContact?.email}
                           {...register("email")}
                         />
                         <FormErrorMessage>
@@ -201,6 +205,7 @@ export const Cards = () => {
                           id="phone"
                           color="white"
                           placeholder="Digite aqui seu numero de telefone"
+						  defaultValue={currentContact?.phone}
                           {...register("phone")}
                         />
                         <FormErrorMessage>
@@ -217,9 +222,7 @@ export const Cards = () => {
                       _hover={{ background: "#081329" }}
                       onClick={handleSubmit((data) => {
                         updateContacts(data, e.id);
-                      })
-                      
-                    }
+                      })}
                     >
                       Editar
                     </Button>

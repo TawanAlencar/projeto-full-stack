@@ -50,24 +50,27 @@ export const MainDashboard = () => {
 
   useEffect(() => {
     renderContacts();
-  }, [renderContacts, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const token = getToken();
     if (!token) {
       router.push("/");
     }
-  }, [getToken, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => {
-    (async () => {
-      const findUser = await api.get("/user/profile", {
+  /*   useEffect(() => {
+  (async () => {
+     const findUser = await api.get("/user/profile", {
         headers: { authorization: `Bearer ${token}` },
-      });
-      setContacts(findUser.data.contacts);
+    });
+     setContacts(findUser.data.contacts);
     })();
-  }, [setContacts, token]);
 
+  }, []);
+ */
   const formSchema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
     name: yup.string().required("Nome obrigatório").min(1),

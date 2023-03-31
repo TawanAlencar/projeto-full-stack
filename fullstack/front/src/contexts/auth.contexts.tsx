@@ -22,8 +22,8 @@ interface IUserContext {
   openContact: boolean;
   setOpenContact: React.Dispatch<React.SetStateAction<boolean>>;
   removeToken: Function;
-  contacts: IListContacts[];
-  setContacts: React.Dispatch<SetStateAction<IListContacts[]>>;
+  contacts: IFindContacts[];
+  setContacts: React.Dispatch<SetStateAction<IFindContacts[]>>;
   getToken: Function;
   router: AppRouterInstance;
   token: string;
@@ -33,6 +33,8 @@ interface IUserContext {
   openEdit: boolean;
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>;
   updateContacts: (payload: IContactsUpdate, id: string) => Promise<void>;
+  currentContact: IFindContacts  | undefined;
+  setCurrentContact: React.Dispatch<SetStateAction<IFindContacts | undefined>>
 }
 
 interface IUser {
@@ -55,6 +57,21 @@ interface IContacts {
   name: string;
   email: string;
   phone: string;
+}
+
+interface IFindContacts{
+  id: string;
+  email: string;
+  name: string;
+  phone: string;
+  user: 
+    {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+    }
+  
 }
 
 interface IListContacts {
@@ -93,10 +110,12 @@ export const UserProvider = ({ children }: IUser) => {
   const [openContact, setOpenContact] = useState(false);
   const router = useRouter();
   const { token } = parseCookies();
-  const [contacts, setContacts] = useState<IListContacts[]>([]);
+  const [contacts, setContacts] = useState<IFindContacts[]>([]);
   const [user, setUser] = useState<IFindUser>();
   const [openEdit, setOpenEdit] = useState(false);
-  
+  const [currentContact, setCurrentContact] = useState<IFindContacts>()
+
+
 
   const submitRegister = async (payload: IRegister): Promise<void> => {
     try {
@@ -155,16 +174,14 @@ export const UserProvider = ({ children }: IUser) => {
   };
 
   const removeContacts = async (id: string): Promise<void> => {
-    try {
+    
       const { data } = await api.delete(`/contact/${id}`, {
         headers: { authorization: `Bearer ${token}` },
       });
-
+      
       toastAcess("Contato deletado com sucesso");
       return data;
-    } catch (error) {
-      toastError("Algo de errado");
-    }
+   
   };
 
   const updateContacts = async (
@@ -208,6 +225,8 @@ export const UserProvider = ({ children }: IUser) => {
         openEdit,
         setOpenEdit,
         updateContacts,
+        currentContact,
+        setCurrentContact
       }}
     >
       {children}
