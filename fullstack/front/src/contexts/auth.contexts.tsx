@@ -24,9 +24,15 @@ interface IUserContext {
   removeToken: Function;
   contacts: IListContacts[];
   setContacts: React.Dispatch<SetStateAction<IListContacts[]>>;
-  getToken: Function,
-  router: AppRouterInstance
-
+  getToken: Function;
+  router: AppRouterInstance;
+  token: string;
+  removeContacts: (id: string) => Promise<void>;
+  user: IFindUser | undefined;
+  setUser: React.Dispatch<React.SetStateAction<IFindUser | undefined>>;
+  openEdit: boolean;
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  updateContacts: (payload: IContactsUpdate, id: string) => Promise<void>;
 }
 
 interface IUser {
@@ -65,6 +71,20 @@ interface IListContacts {
     }
   ];
 }
+interface IFindUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  is_active: boolean;
+  contacts: [];
+}
+
+interface IContactsUpdate {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
 
 export const UserContext = createContext<IUserContext>({} as IUserContext);
 export const UserProvider = ({ children }: IUser) => {
@@ -74,10 +94,11 @@ export const UserProvider = ({ children }: IUser) => {
   const router = useRouter();
   const { token } = parseCookies();
   const [contacts, setContacts] = useState<IListContacts[]>([]);
+  const [user, setUser] = useState<IFindUser>();
+  const [openEdit, setOpenEdit] = useState(false);
+  
 
-  const submitRegister = async (
-    payload: IRegister 
-  ): Promise<void> => {
+  const submitRegister = async (payload: IRegister): Promise<void> => {
     try {
       const { data } = await api.post("/user", payload);
       toastAcess("Cadastro Realizado com Sucesso");
@@ -96,17 +117,17 @@ export const UserProvider = ({ children }: IUser) => {
       router.push("/");
     }
   };
-  const getToken = ()=>{
-    return token
-  }
+  const getToken = () => {
+    return token;
+  };
 
   const submitLogin = async (payload: ILogin): Promise<void> => {
     try {
       const { data } = await api.post("/login", payload);
       toastAcess("Login Realizado com Sucesso");
       setCookie(null, "token", data.token, {
-        maxAge: 30 * 24 * 60 * 60, 
-        path: "/", 
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
       });
 
       router.push("/dashboard");
@@ -120,11 +141,11 @@ export const UserProvider = ({ children }: IUser) => {
       const { data } = await api.post("/contact", payload, {
         headers: { authorization: `Bearer ${token}` },
       });
-      const findUser = await api.get("/user/profile",{
+      const findUser = await api.get("/user/profile", {
         headers: { authorization: `Bearer ${token}` },
-      })
-      console.log(findUser.data)
-      setContacts(findUser.data.contacts)
+      });
+
+      setContacts(findUser.data.contacts);
       setOpenContact(false);
       toastAcess("Contato adicionado com sucesso");
       return data;
@@ -133,7 +154,36 @@ export const UserProvider = ({ children }: IUser) => {
     }
   };
 
+  const removeContacts = async (id: string): Promise<void> => {
+    try {
+      const { data } = await api.delete(`/contact/${id}`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
 
+      toastAcess("Contato deletado com sucesso");
+      return data;
+    } catch (error) {
+      toastError("Algo de errado");
+    }
+  };
+
+  const updateContacts = async (
+    payload: IContactsUpdate,
+    id: string
+  ): Promise<void> => {
+    try {
+      const { data } = await api.patch(`/contact/${id}`, payload, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+    
+      setContacts([...contacts,data]);
+      setOpenEdit(false);
+      toastAcess("Contato atualizado com sucesso");
+      return data;
+    } catch (error) {
+      toastError("Algo de errado");
+    }
+  };
   return (
     <UserContext.Provider
       value={{
@@ -150,7 +200,14 @@ export const UserProvider = ({ children }: IUser) => {
         contacts,
         setContacts,
         getToken,
-        router
+        router,
+        token,
+        removeContacts,
+        user,
+        setUser,
+        openEdit,
+        setOpenEdit,
+        updateContacts,
       }}
     >
       {children}

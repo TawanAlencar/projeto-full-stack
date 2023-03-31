@@ -1,12 +1,17 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { Header } from "../Header";
 import { Login } from "../Login";
 import { Register } from "../Register";
 
-
 export const Main = () => {
   return (
-    <Flex  direction={"column"} w={"100%"} h="100vh" bgImage={"./bg.jpg"} minW={"320px"}>
+    <Flex
+      direction={"column"}
+      w={"100%"}
+      h="100vh"
+      bgImage={"./bg.jpg"}
+      minW={"320px"}
+    >
       <Header>
         <Login />
         <Register />

@@ -18,26 +18,55 @@ import {
 import { Cards } from "@/components/Cards";
 import InputMask from "react-input-mask";
 import { Header } from "../Header";
-import { styleInputMask } from "../Register";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useContextFunction } from "@/contexts/auth.contexts";
-import { useEffect } from "react";
-
+import { useCallback, useEffect } from "react";
+import api from "@/services/api";
 
 export const MainDashboard = () => {
-  
-  const { openContact, setOpenContact, addContacts, removeToken ,getToken,router} =
-    useContextFunction();
+  const {
+    openContact,
+    setOpenContact,
+    addContacts,
+    removeToken,
+    getToken,
+    router,
+    contacts,
+    setContacts,
+    token,
+    user,
+    setUser,
+  } = useContextFunction();
 
-  useEffect(()=>{
-    const token = getToken()
-    if(!token){
-      router.push("/")
+  const renderContacts = useCallback(async () => {
+    const findUser = await api.get("/user/profile", {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    setContacts(findUser.data.contacts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contacts]);
+
+  useEffect(() => {
+    renderContacts();
+  }, [renderContacts, user]);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      router.push("/");
     }
-  },[getToken, router])
+  }, [getToken, router]);
 
+  useEffect(() => {
+    (async () => {
+      const findUser = await api.get("/user/profile", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      setContacts(findUser.data.contacts);
+    })();
+  }, [setContacts, token]);
 
   const formSchema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
@@ -64,10 +93,10 @@ export const MainDashboard = () => {
       <Flex
         direction={"column"}
         w={"100%"}
-        h="100vh"
         bgImage={"./bg.jpg"}
         minW={"320px"}
         gap="20px"
+        minH={"100vh"}
       >
         <Header>
           <Button
@@ -166,10 +195,11 @@ export const MainDashboard = () => {
                       <FormLabel color="white" htmlFor="name">
                         Telefone
                       </FormLabel>
-                      <InputMask
+                      <Input
                         mask={"(99) 99999-9999"}
                         id="phone"
-                        style={styleInputMask}
+                        as={InputMask}
+                        color="white"
                         placeholder="Digite aqui seu numero de telefone"
                         {...register("phone")}
                       />
@@ -202,7 +232,7 @@ export const MainDashboard = () => {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            <Cards/>
+            <Cards />
           </Flex>
         </Flex>
       </Flex>

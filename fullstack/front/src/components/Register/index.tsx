@@ -19,17 +19,6 @@ import * as yup from "yup";
 import { useContextFunction } from "@/contexts/auth.contexts";
 import InputMask from "react-input-mask";
 
-
-export const styleInputMask = {
-  width: "100%",
-  backgroundColor: "inherit",
-  border: "1px solid",
-  borderColor: "inherit",
-  height: "var(--chakra-sizes-10)",
-  borderRadius: "var(--chakra-radii-md)",
-  padding: "0 1rem",
-  color: "white",
-};
 export const Register = () => {
   const { submitRegister, setOpenRegister, openRegister } =
     useContextFunction();
@@ -62,8 +51,6 @@ export const Register = () => {
     resolver: yupResolver(formSchema),
   });
 
-
-
   return (
     <>
       <Button
@@ -91,10 +78,7 @@ export const Register = () => {
             <FormControl
               as={"form"}
               isInvalid={
-                errors.name ||
-                errors.password ||
-                errors.email ||
-                errors.phone
+                errors.name || errors.password || errors.email || errors.phone
                   ? true
                   : false
               }
@@ -145,10 +129,11 @@ export const Register = () => {
                 <FormLabel color="white" htmlFor="name">
                   Telefone
                 </FormLabel>
-                <InputMask
+                <Input
+                  as={InputMask}
                   mask={"(99) 99999-9999"}
                   id="phone"
-                  style={styleInputMask}
+                  color={"white"}
                   placeholder="Digite aqui seu numero de telefone"
                   {...register("phone")}
                 />

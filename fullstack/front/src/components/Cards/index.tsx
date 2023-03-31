@@ -8,10 +8,55 @@ import {
   Text,
   Box,
   IconButton,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
 } from "@chakra-ui/react";
+import InputMask from "react-input-mask";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
 
 export const Cards = () => {
-  const { contacts, setContacts } = useContextFunction();
+  const {
+    contacts,
+    setContacts,
+    removeContacts,
+    openEdit,
+    setOpenEdit,
+    updateContacts,
+  } = useContextFunction();
+
+  const formSchema = yup.object().shape({
+    email: yup.string().email(),
+    name: yup.string(),
+    phone: yup.string(),
+  });
+
+  type errors = {
+    name: string;
+    email: string;
+    phone: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<errors>({
+    resolver: yupResolver(formSchema),
+    
+  });
 
   return (
     <>
@@ -20,11 +65,20 @@ export const Cards = () => {
         flexDirection="column"
         justifyContent={"flex-start"}
         m="0"
+        h="700px"
+        overflowY={"scroll"}
+        css={{
+          "&::-webkit-scrollbar": { width: "4px" },
+          "&::-webkit-scrollbar-thumb": {
+            background: "mediumspringgreen",
+            borderRadius: "24px",
+          },
+        }}
       >
         <Heading color={"white"} fontSize="25px">
           Lista de Contatos
         </Heading>
-        <Flex>
+        <Flex direction={"column"}>
           {contacts.map((e) => (
             <ListItem
               key={e.id}
@@ -73,6 +127,7 @@ export const Cards = () => {
                     aria-label="edit"
                     icon={<EditIcon />}
                     _hover={{ background: "transparent" }}
+                    onClick={() => setOpenEdit(true)}
                   ></IconButton>
                   <IconButton
                     bg="transparent"
@@ -80,9 +135,107 @@ export const Cards = () => {
                     icon={<DeleteIcon />}
                     color="red"
                     _hover={{ background: "transparent" }}
+                    onClick={() => removeContacts(e.id)}
                   ></IconButton>
                 </Box>
               </Flex>
+              <Modal isOpen={openEdit} onClose={() => setOpenEdit(false)}>
+                <ModalOverlay />
+                <ModalContent bg="#000000ed" border={"1px solid white"}>
+                  <ModalHeader color="white">Editar Contato</ModalHeader>
+                  <ModalCloseButton color={"white"} />
+                  <ModalBody
+                    display="flex"
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                  >
+                    <FormControl
+                      as={"form"}
+                      isInvalid={
+                        errors.name || errors.email || errors.phone
+                          ? true
+                          : false
+                      }
+                      display="flex"
+                      flexDirection={"column"}
+                      gap="20px"
+                    >
+                      <FormLabel color="white" htmlFor="name">
+                        Nome
+                      </FormLabel>
+                      <Box>
+                        <Input
+                          id="name"
+                          color="white"
+                          placeholder="Digite aqui o nome completo"
+                          {...register("name")}
+                        />
+                        <FormErrorMessage>
+                          {errors.name?.message}
+                        </FormErrorMessage>
+                      </Box>
+                      <Box>
+                        <FormLabel color="white" htmlFor="email">
+                          Email
+                        </FormLabel>
+
+                        <Input
+                          id="email"
+                          color="white"
+                          placeholder="Digite aqui seu email"
+                          type="email"
+                          {...register("email")}
+                        />
+                        <FormErrorMessage>
+                          {errors.email?.message}
+                        </FormErrorMessage>
+                      </Box>
+
+                      <Box>
+                        <FormLabel color="white" htmlFor="name">
+                          Telefone
+                        </FormLabel>
+                        <Input
+                          as={InputMask}
+                          mask={"(99) 99999-9999"}
+                          id="phone"
+                          color="white"
+                          placeholder="Digite aqui seu numero de telefone"
+                          {...register("phone")}
+                        />
+                        <FormErrorMessage>
+                          {errors.phone?.message}
+                        </FormErrorMessage>
+                      </Box>
+                    </FormControl>
+                  </ModalBody>
+
+                  <ModalFooter display={"flex"} gap="20px">
+                    <Button
+                      bg="blue"
+                      color={"white"}
+                      _hover={{ background: "#081329" }}
+                      onClick={handleSubmit((data) => {
+                        updateContacts(data, e.id);
+                      })
+                      
+                    }
+                    >
+                      Editar
+                    </Button>
+
+                    <Button
+                      bg="red"
+                      color="white"
+                      mr={3}
+                      onClick={() => setOpenEdit(false)}
+                      _hover={{ background: "#ff0000a9" }}
+                    >
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
             </ListItem>
           ))}
         </Flex>
