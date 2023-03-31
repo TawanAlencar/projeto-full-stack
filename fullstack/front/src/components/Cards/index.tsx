@@ -25,18 +25,17 @@ import InputMask from "react-input-mask";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 
 export const Cards = () => {
   const {
     contacts,
-    setContacts,
     removeContacts,
     openEdit,
     setOpenEdit,
     updateContacts,
     currentContact,
     setCurrentContact,
-    user,
   } = useContextFunction();
 
   const formSchema = yup.object().shape({
@@ -58,6 +57,10 @@ export const Cards = () => {
   } = useForm<errors>({
     resolver: yupResolver(formSchema),
   });
+
+  useEffect(()=>{
+    
+  },[removeContacts,updateContacts])
 
   return (
     <>

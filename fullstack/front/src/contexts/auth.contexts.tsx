@@ -28,8 +28,6 @@ interface IUserContext {
   router: AppRouterInstance;
   token: string;
   removeContacts: (id: string) => Promise<void>;
-  user: IFindUser | undefined;
-  setUser: React.Dispatch<React.SetStateAction<IFindUser | undefined>>;
   openEdit: boolean;
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>;
   updateContacts: (payload: IContactsUpdate, id: string) => Promise<void>;
@@ -75,38 +73,6 @@ interface IFindContacts{
 }
 
 
-
-interface IListContacts {
-  id: string;
-  email: string;
-  name: string;
-  phone: string;
-  contacts: [
-    {
-      id: string;
-      name: string;
-      email: string;
-      phone: string;
-    }
-  ];
-}
-
-interface IFindUser {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  is_active: boolean;
-  contacts:[
-    {
-      id: string;
-      name: string;
-      email: string;
-      phone: string;
-    }
-  ];
-}
-
 interface IContactsUpdate {
   name?: string;
   email?: string;
@@ -121,7 +87,6 @@ export const UserProvider = ({ children }: IUser) => {
   const router = useRouter();
   const { token } = parseCookies();
   const [contacts, setContacts] = useState<IFindContacts[]>([]);
-  const [user, setUser] = useState<IFindUser>();
   const [openEdit, setOpenEdit] = useState(false);
   const [currentContact, setCurrentContact] = useState<IFindContacts>()
 
@@ -182,14 +147,19 @@ export const UserProvider = ({ children }: IUser) => {
       toastError("Algo de errado");
     }
   };
-  
+
   const removeContacts = async (id: string): Promise<void> => {
     
       const { data } = await api.delete(`/contact/${id}`, {
         headers: { authorization: `Bearer ${token}` },
       });
-      
+      const findUser = await api.get("/user/profile", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      setContacts(findUser.data.contacts);
       toastAcess("Contato deletado com sucesso");
+      
       return data;
    
   };
@@ -202,8 +172,11 @@ export const UserProvider = ({ children }: IUser) => {
       const { data } = await api.patch(`/contact/${id}`, payload, {
         headers: { authorization: `Bearer ${token}` },
       });
-    
-      setContacts([...contacts,data]);
+      const findUser = await api.get("/user/profile", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      setContacts(findUser.data.contacts);
       setOpenEdit(false);
       toastAcess("Contato atualizado com sucesso");
       return data;
@@ -230,8 +203,7 @@ export const UserProvider = ({ children }: IUser) => {
         router,
         token,
         removeContacts,
-        user,
-        setUser,
+       
         openEdit,
         setOpenEdit,
         updateContacts,

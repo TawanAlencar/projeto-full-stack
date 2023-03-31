@@ -33,26 +33,23 @@ export const MainDashboard = () => {
     removeToken,
     getToken,
     router,
-    contacts,
     setContacts,
-    token,
-    user,
-    setUser,
+    token
   } = useContextFunction();
 
-  const renderContacts = useCallback(async () => {
-    const findUser = await api.get("/user/profile", {
-      headers: { authorization: `Bearer ${token}` },
-    });
-    setContacts(findUser.data.contacts);
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contacts]);
 
+   
   useEffect(() => {
-    renderContacts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contacts]); 
+    (async()=>{
+
+      const findUser = await api.get("/user/profile", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      setContacts(findUser.data.contacts);
+      
+    })()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const token = getToken();
@@ -62,7 +59,6 @@ export const MainDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
   const formSchema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
     name: yup.string().required("Nome obrigatório").min(1),
@@ -82,6 +78,9 @@ export const MainDashboard = () => {
   } = useForm<errors>({
     resolver: yupResolver(formSchema),
   });
+
+
+
 
   return (
     <>
